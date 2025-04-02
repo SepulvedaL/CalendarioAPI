@@ -5,15 +5,18 @@ import java.time.LocalDate;
 // Define cómo se transfieren los datos de CalendarioEntidad
 public class CalendarioDTO {
     private LocalDate fecha;
-    private String descripcion;
+    private String nombre;
+    private String tipo;
+    
 
     // Constructor vacío
     public CalendarioDTO() {}
 
     // Constructor con parámetros
-    public CalendarioDTO(LocalDate fecha, String descripcion) {
+    public CalendarioDTO(LocalDate fecha, String nombre, String tipo) {
         this.fecha = fecha;
-        this.descripcion = descripcion;
+        this.nombre = nombre;
+        this.tipo = tipo;
     }
 
     // Getters y Setters
@@ -25,11 +28,20 @@ public class CalendarioDTO {
         this.fecha = fecha;
     }
 
-    public String getDescripcion() {
-        return descripcion;
+    public String getNombre() {
+        return nombre;
     }
 
-    public void setDescripcion(String descripcion) {
-        this.descripcion = descripcion;
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
     }
+
+    public String getTipo() {
+        return tipo;
+    }
+
+    public void setTipo(String tipo) {
+        this.tipo = tipo;
+    }
+
 }

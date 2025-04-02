@@ -9,8 +9,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+//import calendario.api.aplicacion.CalendarioDTO;
 import calendario.api.aplicacion.CalendarioFacade;
+import calendario.api.aplicacion.FestivoDTO;
 import calendario.api.dominio.CalendarioEntidad;
+
 
 // Controlador REST para gestionar el calendario.
 @RestController
@@ -42,7 +45,7 @@ public class CalendarioController {
     }
 
     @GetMapping("/listar-festivos/{anio}")
-    public List<CalendarioEntidad> listarFestivos(@PathVariable int anio) {
+    public List<FestivoDTO> listarFestivos(@PathVariable int anio) {
         return calendarioFacade.listarFestivos(anio);
     }
 }

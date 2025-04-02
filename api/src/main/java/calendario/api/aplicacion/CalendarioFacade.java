@@ -16,7 +16,6 @@ import calendario.api.infraestructura.client.FestivoApiClient;
 import calendario.api.infraestructura.repositorio.CalendarioRepository;
 import calendario.api.infraestructura.repositorio.TipoRepository;
 
-
 // Orquesta la generación del calendario de festivos, llamando a CalendarioService y a FestivoApiClient
 @Service
 public class CalendarioFacade {
@@ -40,13 +39,17 @@ public class CalendarioFacade {
     }
 
     @Transactional(readOnly = true)
-    public List<CalendarioEntidad> listarFestivos(int anio) {
+    public List<FestivoDTO> listarFestivos(int anio) {
         return calendarioRepository.findAll()
                 .stream()
-                .filter(calendario -> Year.from(calendario.getFecha()).getValue() == anio && "Festivo".equals(calendario.getTipo().getTipo()))
+                .filter(calendario -> Year.from(calendario.getFecha()).getValue() == anio &&
+                        "Festivo".equals(calendario.getTipo().getTipo()))
+                .map(calendario -> new FestivoDTO(
+                        calendario.getDescripcion() != null ? calendario.getDescripcion() : "Festivo sin descripción",
+                        calendario.getFecha()))
                 .collect(Collectors.toList());
     }
-    
+
     @Transactional
     public boolean generarCalendario(int anio) {
         // Obtener los festivos desde la API de Express.js
@@ -73,17 +76,18 @@ public class CalendarioFacade {
                     .findFirst();
 
             if (festivoEncontrado.isPresent()) {
-                descripcion = festivoEncontrado.get().getDescripcion();
+                descripcion = festivoEncontrado.get().getNombre();
                 if (descripcion == null || descripcion.isEmpty()) {
                     descripcion = "Festivo sin descripción"; // 🔹 Asignar valor por defecto
                 }
                 tipo = tipoRepository.findById(3L).orElse(null); // ID 3 = Festivo
             }
 
-            // Asegurar que `tipo` nunca sea null
+            // 🔹 Asegurar que `tipo` no sea null antes de guardar
             if (tipo == null) {
-                tipo = tipoRepository.findById(1L).orElse(null); // 🔹 Asignar "Día Laboral" si no se encuentra otro
-                                                                 // tipo
+                System.err.println("⚠️ ERROR: No se encontró el tipo en la BD, asignando 'Día Laboral'.");
+                tipo = tipoRepository.findById(1L)
+                        .orElseThrow(() -> new IllegalStateException("No se encontró ningún tipo en la base de datos"));
             }
 
             // Guardar en la base de datos
