@@ -20,28 +20,16 @@ public class CalendarioDTO {
     }
 
     // Getters y Setters
-    public LocalDate getFecha() {
-        return fecha;
-    }
+    public LocalDate getFecha() { return fecha; }
 
-    public void setFecha(LocalDate fecha) {
-        this.fecha = fecha;
-    }
+    public void setFecha(LocalDate fecha) { this.fecha = fecha; }
 
-    public String getNombre() {
-        return nombre;
-    }
+    public String getNombre() { return nombre; }
 
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
+    public void setNombre(String nombre) { this.nombre = nombre;}
 
-    public String getTipo() {
-        return tipo;
-    }
+    public String getTipo() { return tipo; }
 
-    public void setTipo(String tipo) {
-        this.tipo = tipo;
-    }
+    public void setTipo(String tipo) { this.tipo = tipo;}
 
 }

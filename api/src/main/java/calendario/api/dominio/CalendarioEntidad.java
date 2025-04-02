@@ -19,6 +19,17 @@ public class CalendarioEntidad {
     @Column(nullable = false)
     private String descripcion;
 
+    // Constructor
+    public CalendarioEntidad(Long id, LocalDate fecha, TipoEntidad tipo, String descripcion) {
+        this.id = id;
+        this.fecha = fecha;
+        this.tipo = tipo;
+        this.descripcion = descripcion;
+    }
+
+    public CalendarioEntidad() {
+    }
+
     // Getters y Setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
