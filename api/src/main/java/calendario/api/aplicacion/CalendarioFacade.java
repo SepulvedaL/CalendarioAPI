@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import calendario.api.core.ICalendarioService;
 import calendario.api.dominio.CalendarioEntidad;
 import calendario.api.dominio.TipoEntidad;
 import calendario.api.infraestructura.client.FestivoApiClient;
@@ -18,7 +19,7 @@ import calendario.api.infraestructura.repositorio.ITipoRepository;
 
 // Orquesta la generación del calendario de festivos, llamando a CalendarioService y a FestivoApiClient
 @Service
-public class CalendarioFacade {
+public class CalendarioFacade implements ICalendarioService{
     private final FestivoApiClient festivoApiClient;
     private final ICalendarioRepository calendarioRepository;
     private final ITipoRepository tipoRepository;
@@ -30,6 +31,7 @@ public class CalendarioFacade {
         this.tipoRepository = tipoRepository;
     }
 
+    @Override
     @Transactional(readOnly = true)
     public List<CalendarioEntidad> listarCalendario(int anio) {
         return calendarioRepository.findAll()
@@ -38,6 +40,7 @@ public class CalendarioFacade {
                 .collect(Collectors.toList());
     }
 
+    @Override
     @Transactional(readOnly = true)
     public List<FestivoDTO> listarFestivos(int anio) {
         return calendarioRepository.findAll()
@@ -50,6 +53,7 @@ public class CalendarioFacade {
                 .collect(Collectors.toList());
     }
 
+    @Override
     @Transactional
     public boolean generarCalendario(int anio) {
         // Obtener los festivos desde la API de Express.js
