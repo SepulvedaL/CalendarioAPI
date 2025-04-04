@@ -2,6 +2,7 @@ package calendario.api.presentacion;
 
 import java.util.List;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -14,12 +15,11 @@ import calendario.api.aplicacion.CalendarioFacade;
 import calendario.api.aplicacion.FestivoDTO;
 import calendario.api.dominio.CalendarioEntidad;
 
-
 // Controlador REST para gestionar el calendario.
 @RestController
 @RequestMapping("/calendario")
 public class CalendarioController {
-    
+
     private final CalendarioFacade calendarioFacade;
 
     public CalendarioController(CalendarioFacade calendarioFacade) {
@@ -28,11 +28,11 @@ public class CalendarioController {
 
     @PostMapping("/generar/{anio}")
     public ResponseEntity<String> generarCalendario(@PathVariable int anio) {
-        boolean resultado = calendarioFacade.generarCalendario(anio);
-        if (resultado) {
-            return ResponseEntity.ok("Calendario generado exitosamente para el año " + anio);
+        boolean generado = calendarioFacade.generarCalendario(anio);
+        if (!generado) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("El calendario del año " + anio + " ya existe.");
         }
-        return ResponseEntity.badRequest().body("No se pudo generar el calendario");
+        return ResponseEntity.ok("Calendario generado con éxito para el año " + anio);
     }
 
     @GetMapping("/{anio}")

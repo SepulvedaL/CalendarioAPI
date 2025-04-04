@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import calendario.api.aplicacion.CalendarioDTO;
-import calendario.api.aplicacion.TipoDTO;
+// import calendario.api.aplicacion.TipoDTO;
 
 
 // Cliente para consumir la API de Express.js.
@@ -28,12 +28,12 @@ public class FestivoApiClient {
                 .block(); // Bloquea hasta obtener respuesta
     }
 
-    public List<TipoDTO> obtenerTiposFestivos() {
-        return webClient.get()
-                .uri("/tiposFestivos")
-                .retrieve()
-                .bodyToFlux(TipoDTO.class)
-                .collectList()
-                .block();
-    }
+    // public List<TipoDTO> obtenerTiposFestivos() {
+    //     return webClient.get()
+    //             .uri("/tiposFestivos")
+    //             .retrieve()
+    //             .bodyToFlux(TipoDTO.class)
+    //             .collectList()
+    //             .block();
+    // }
 }

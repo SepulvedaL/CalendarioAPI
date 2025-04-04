@@ -17,9 +17,9 @@ import calendario.api.infraestructura.client.FestivoApiClient;
 import calendario.api.infraestructura.repositorio.ICalendarioRepository;
 import calendario.api.infraestructura.repositorio.ITipoRepository;
 
-// Orquesta la generación del calendario de festivos, llamando a CalendarioService y a FestivoApiClient
+// Orquesta la generación del calendario de festivos, llamando a ICalendarioService y a FestivoApiClient
 @Service
-public class CalendarioFacade implements ICalendarioService{
+public class CalendarioFacade implements ICalendarioService {
     private final FestivoApiClient festivoApiClient;
     private final ICalendarioRepository calendarioRepository;
     private final ITipoRepository tipoRepository;
@@ -46,7 +46,7 @@ public class CalendarioFacade implements ICalendarioService{
         return calendarioRepository.findAll()
                 .stream()
                 .filter(calendario -> Year.from(calendario.getFecha()).getValue() == anio &&
-                        "Festivo".equals(calendario.getTipo().getTipo()))
+                        "Día Festivo".equals(calendario.getTipo().getTipo()))
                 .map(calendario -> new FestivoDTO(
                         calendario.getDescripcion() != null ? calendario.getDescripcion() : "Festivo sin descripción",
                         calendario.getFecha()))
@@ -56,6 +56,12 @@ public class CalendarioFacade implements ICalendarioService{
     @Override
     @Transactional
     public boolean generarCalendario(int anio) {
+        // Verificar si el calendario ya existe antes de generarlo
+        if (!calendarioRepository.findByFechaBetween(LocalDate.of(anio, 1, 1), LocalDate.of(anio, 12, 31)).isEmpty()) {
+            System.out.println("El calendario del año " + anio + " ya existe. No se generará nuevamente.");
+            return false;
+        }
+
         // Obtener los festivos desde la API de Express.js
         List<CalendarioDTO> festivos = festivoApiClient.obtenerFestivosPorAnio(anio);
 
@@ -87,7 +93,7 @@ public class CalendarioFacade implements ICalendarioService{
                 tipo = tipoRepository.findById(3L).orElse(null); // ID 3 = Festivo
             }
 
-            // 🔹 Asegurar que `tipo` no sea null antes de guardar
+            // Asegurar que `tipo` no sea null antes de guardar
             if (tipo == null) {
                 System.err.println(" ERROR: No se encontró el tipo en la BD, asignando 'Día Laboral'.");
                 tipo = tipoRepository.findById(1L)

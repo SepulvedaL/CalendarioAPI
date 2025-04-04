@@ -1,6 +1,5 @@
 package calendario.api.core;
 
-
 import java.util.List;
 
 import calendario.api.aplicacion.FestivoDTO;
