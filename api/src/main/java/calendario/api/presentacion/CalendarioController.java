@@ -39,13 +39,24 @@ public class CalendarioController {
     public ResponseEntity<List<CalendarioEntidad>> listarCalendario(@PathVariable int anio) {
         List<CalendarioEntidad> calendario = calendarioFacade.listarCalendario(anio);
         if (calendario == null || calendario.isEmpty()) {
-            return ResponseEntity.noContent().build();
+            calendarioFacade.generarCalendario(anio);
+            calendario = calendarioFacade.listarCalendario(anio);
+            return ResponseEntity.ok(calendario);
+            // return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(calendario);
     }
 
     @GetMapping("/listar-festivos/{anio}")
-    public List<FestivoDTO> listarFestivos(@PathVariable int anio) {
-        return calendarioFacade.listarFestivos(anio);
+    public ResponseEntity<List<FestivoDTO>> listarFestivos(@PathVariable int anio) {
+        List<FestivoDTO> calendario = calendarioFacade.listarFestivos(anio);
+        if (calendario == null || calendario.isEmpty()) {
+            calendarioFacade.generarCalendario(anio);
+            calendario = calendarioFacade.listarFestivos(anio);
+            return ResponseEntity.ok(calendario);
+            // return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(calendario);
+        //return calendarioFacade.listarFestivos(anio);
     }
 }
